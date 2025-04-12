@@ -29,7 +29,6 @@ export default defineConfig(({ mode }) => ({
     minify: true,
     cssMinify: true,
     target: 'es2015',  // Targeting modern browsers for smaller bundle size
-    // Splitting code into chunks for optimized loading
     chunkSizeWarningLimit: 500,
     sourcemap: true
   },
@@ -43,9 +42,7 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // This is crucial for GitHub Pages deployment - use './' instead of '/' for relative paths
-  base: '/bds/', // Update this to match your repository name
-  // Additional optimizations for faster development
+  base: '/bds/', // Make sure this matches your GitHub repository name
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom'],
     esbuildOptions: {

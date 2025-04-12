@@ -39,7 +39,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Always use BrowserRouter for compatibility with GitHub Pages
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>

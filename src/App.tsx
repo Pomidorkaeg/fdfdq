@@ -23,18 +23,25 @@ const CoachesManagement = lazy(() => import("./pages/admin/CoachesManagement"));
 const TeamsManagement = lazy(() => import("./pages/admin/TeamsManagement"));
 const NewsManagement = lazy(() => import("./pages/admin/NewsManagement"));
 
-// Fallback loading component
-const PageLoading = () => (
-  <div className="flex h-screen w-full items-center justify-center">
-    <div className="h-10 w-10 animate-spin rounded-full border-4 border-fc-green border-t-transparent"></div>
-  </div>
-);
+// Fallback loading component with timeout
+const PageLoading = () => {
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-fc-green border-t-transparent"></div>
+        <p className="text-gray-600">Загрузка...</p>
+      </div>
+    </div>
+  );
+};
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 1000, // 1 minute
+      staleTime: 60 * 1000,
       refetchOnWindowFocus: false,
+      retry: 1,
+      retryDelay: 1000,
     },
   },
 });

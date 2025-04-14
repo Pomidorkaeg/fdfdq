@@ -2,25 +2,21 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/bds/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/bds/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#2e7d32" />
     <meta name="description" content="Официальный сайт футбольного клуба Гудаута" />
-    <title>ФК "Гудаута"</title>
+    <title>ФК Гудаута</title>
     <link rel="canonical" href="https://pomidorkaeg.github.io/bds/" />
     
     <!-- Preload critical assets -->
-    <link rel="preload" href="/bds/assets/index.css" as="style">
-    <link rel="preload" href="/bds/assets/index.js" as="script">
-    <link rel="preload" href="/bds/assets/react-vendor-C5eXiI5f.js" as="script">
-    <link rel="preload" href="/bds/lovable-uploads/e711e51e-481c-438c-987e-2aa5f999290a.png" as="image">
+    <link rel="preload" as="image" href="/bds/lovable-uploads/e711e51e-481c-438c-987e-2aa5f999290a.png" />
+    <link rel="preload" as="style" href="/bds/assets/index.css" />
+    <link rel="preload" as="script" href="/bds/assets/index.js" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
-    
-    <!-- Add instant.page for faster page navigation -->
-    <script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEhFd1mJRERm11M0MNdqZjvl"></script>
     
     <script>
       // Single Page Apps for GitHub Pages
@@ -79,36 +75,24 @@
       }
       .loading::after {
         content: '';
-        width: 32px;
-        height: 32px;
-        border: 3px solid #2E7D32;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #2E7D32;
         border-top-color: transparent;
         border-radius: 50%;
-        animation: spin 0.6s linear infinite;
+        animation: spin 1s linear infinite;
       }
       @keyframes spin {
         to { transform: rotate(360deg); }
       }
-      .fade-enter {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      .fade-enter-active {
-        opacity: 1;
-        transition: opacity 200ms ease-in;
-      }
-      .fade-exit {
-        opacity: 1;
-      }
-      .fade-exit-active {
-        opacity: 0;
-        transition: opacity 200ms ease-in;
-      }
     </style>
+    <script type="module" crossorigin src="/bds/assets/index-B8v6iQwI.js"></script>
+    <link rel="modulepreload" crossorigin href="/bds/assets/react-vendor-C5eXiI5f.js">
+    <link rel="modulepreload" crossorigin href="/bds/assets/ui-B5VS9Rxm.js">
+    <link rel="stylesheet" crossorigin href="/bds/assets/index-DQea3YW2.css">
   </head>
   <body>
     <div id="loadingIndicator" class="loading"></div>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

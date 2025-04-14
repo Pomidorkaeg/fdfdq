@@ -12,7 +12,6 @@
     
     <!-- Preload critical assets -->
     <link rel="preload" as="image" href="/bds/lovable-uploads/e711e51e-481c-438c-987e-2aa5f999290a.png" />
-    <link rel="preload" as="image" href="/bds/lovable-uploads/10641be5-36c7-4f6d-a5b4-ee39048e40ac.png" />
     <link rel="preload" as="style" href="/bds/assets/index.css" />
     <link rel="preload" as="script" href="/bds/assets/index.js" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,13 +20,23 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
     
     <script>
-      // Redirect handling for GitHub Pages
+      // Handle GitHub Pages SPA routing
       (function() {
-        var redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect && redirect != location.href) {
-          history.replaceState(null, null, redirect.split('/bds')[1]);
+        const path = localStorage.getItem('spa-path');
+        if (path) {
+          localStorage.removeItem('spa-path');
+          if (path !== window.location.pathname.substring('/bds'.length)) {
+            window.history.replaceState(null, null, '/bds' + path);
+          }
         }
+
+        // Remove loading state if it persists too long
+        setTimeout(function() {
+          const loadingEl = document.querySelector('.loading');
+          if (loadingEl && loadingEl.parentNode) {
+            loadingEl.parentNode.removeChild(loadingEl);
+          }
+        }, 5000); // 5 second timeout
       })();
     </script>
     
@@ -43,6 +52,7 @@
         position: fixed;
         inset: 0;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         background: #f5f5f5;
@@ -63,6 +73,11 @@
       @keyframes spin {
         to { transform: rotate(360deg); }
       }
+      .loading-text {
+        margin-top: 1rem;
+        color: #2e7d32;
+        font-size: 1rem;
+      }
     </style>
     <script type="module" crossorigin src="/bds/assets/index-B7Yoo_GN.js"></script>
     <link rel="modulepreload" crossorigin href="/bds/assets/vendor-D6ndfC6E.js">
@@ -73,6 +88,7 @@
     <div id="root">
       <div class="loading">
         <div class="spinner"></div>
+        <div class="loading-text">Загрузка...</div>
       </div>
     </div>
   </body>

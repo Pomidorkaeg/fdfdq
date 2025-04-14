@@ -5,10 +5,8 @@
     <link rel="icon" type="image/svg+xml" href="/bds/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#2e7d32" />
-    <title>ФК Гудаута</title>
     <meta name="description" content="ФК Гудаута - Официальный сайт футбольного клуба" />
-    <meta name="author" content="ФК Гудаута" />
-    <meta property="og:image" content="/bds/og-image.png" />
+    <title>ФК Гудаута</title>
     
     <!-- Preload critical assets -->
     <link rel="preload" as="image" href="/bds/lovable-uploads/e711e51e-481c-438c-987e-2aa5f999290a.png" />
@@ -19,38 +17,37 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
     
-    <script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      (function(l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+        
+        // Handle redirect from 404.html
+        var p = new URLSearchParams(window.location.search).get('p');
+        if (p) {
+          window.history.replaceState(null, null, p);
+        }
+      }(window.location));
+
       // Register service worker
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
+        window.addEventListener('load', function() {
           navigator.serviceWorker.register('/bds/sw.js', { scope: '/bds/' })
-            .then(registration => {
+            .then(function(registration) {
               console.log('ServiceWorker registration successful');
             })
-            .catch(err => {
+            .catch(function(err) {
               console.log('ServiceWorker registration failed: ', err);
             });
         });
       }
-
-      // Handle GitHub Pages SPA routing
-      (function() {
-        const path = localStorage.getItem('spa-path');
-        if (path) {
-          localStorage.removeItem('spa-path');
-          if (path !== window.location.pathname.substring('/bds'.length)) {
-            window.history.replaceState(null, null, '/bds' + path);
-          }
-        }
-
-        // Remove loading state if it persists too long
-        setTimeout(function() {
-          const loadingEl = document.querySelector('.loading');
-          if (loadingEl && loadingEl.parentNode) {
-            loadingEl.parentNode.removeChild(loadingEl);
-          }
-        }, 5000); // 5 second timeout
-      })();
     </script>
     
     <style>
@@ -71,6 +68,7 @@
         background: #f5f5f5;
         opacity: 0;
         animation: fade-in 0.2s ease forwards;
+        z-index: 9999;
       }
       @keyframes fade-in {
         to { opacity: 1; }
@@ -91,18 +89,45 @@
         color: #2e7d32;
         font-size: 1rem;
       }
+      .loading-error {
+        display: none;
+        text-align: center;
+        margin-top: 1rem;
+      }
+      .loading.timeout .spinner {
+        display: none;
+      }
+      .loading.timeout .loading-error {
+        display: block;
+      }
     </style>
-    <script type="module" crossorigin src="/bds/assets/index-NQfDMm0O.js"></script>
-    <link rel="modulepreload" crossorigin href="/bds/assets/vendor-DPkAhkUG.js">
-    <link rel="modulepreload" crossorigin href="/bds/assets/ui-CkcHHj86.js">
+    <script type="module" crossorigin src="/bds/assets/index-C5T_0QIt.js"></script>
+    <link rel="modulepreload" crossorigin href="/bds/assets/vendor-VrRidEet.js">
+    <link rel="modulepreload" crossorigin href="/bds/assets/ui-dsA3UTJJ.js">
     <link rel="stylesheet" crossorigin href="/bds/assets/index-DQea3YW2.css">
   </head>
   <body>
     <div id="root">
-      <div class="loading">
+      <div class="loading" id="loadingIndicator">
         <div class="spinner"></div>
         <div class="loading-text">Загрузка...</div>
+        <div class="loading-error">
+          <p style="color: #2e7d32; font-size: 1.1rem;">Загрузка занимает больше времени, чем обычно</p>
+          <button onclick="window.location.reload()" 
+            style="background: #2e7d32; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 12px;">
+            Обновить страницу
+          </button>
+        </div>
       </div>
     </div>
+    <script>
+      // Handle loading timeout
+      setTimeout(function() {
+        var loadingEl = document.getElementById('loadingIndicator');
+        if (loadingEl) {
+          loadingEl.classList.add('timeout');
+        }
+      }, 10000);
+    </script>
   </body>
 </html>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Hero from '@/components/Hero';
 import Navbar from '@/components/Navbar';
@@ -7,6 +6,7 @@ import TournamentCard from '@/components/TournamentCard';
 import LazyTournamentTable from '@/components/LazyTournamentTable';
 import { ArrowRight, Trophy, Users, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import { getTournamentsList, Tournament } from '@/utils/api';
 
 const Index = () => {
@@ -19,11 +19,8 @@ const Index = () => {
       try {
         const data = await getTournamentsList();
         setTournaments(data);
-        
-        // Set featured tournament (first featured one or first in the list)
         const featured = data.find((t: any) => t.featured) || data[0];
         setFeaturedTournament(featured);
-        
         setLoading(false);
       } catch (error) {
         console.error("Error fetching tournaments:", error);
@@ -41,7 +38,7 @@ const Index = () => {
       <main className="flex-grow page-transition">
         <Hero />
         
-        {/* Featured Tournament Table Section - Push down to accommodate the full-screen hero */}
+        {/* Featured Tournament Table Section */}
         <section className="pt-32 px-4 sm:px-6 lg:px-8 bg-white">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
@@ -73,18 +70,17 @@ const Index = () => {
             </div>
             
             <div className="mt-10 text-center">
-              <Link 
-                to="/tournaments" 
-                className="bg-fc-yellow hover:bg-fc-yellow/90 text-fc-darkGreen px-6 py-3 rounded-md inline-flex items-center shadow-md hover:shadow-lg transition-all duration-300"
-              >
-                Все турнирные таблицы
-                <ArrowRight size={18} className="ml-2" />
-              </Link>
+              <Button asChild variant="subtle" size="lg">
+                <Link to="/tournaments" className="inline-flex items-center">
+                  Все турнирные таблицы
+                  <ArrowRight className="ml-2" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
         
-        {/* Club Values Section - Updated with green and yellow colors instead of black/orange */}
+        {/* Club Values Section */}
         <section className="bg-fc-darkGreen text-white py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -138,12 +134,14 @@ const Index = () => {
                 </p>
               </div>
               
-              <Link to="/tournaments" className="mt-4 md:mt-0 bg-fc-darkGreen text-white hover:bg-fc-green px-6 py-3 rounded-md border-2 border-fc-darkGreen flex items-center gap-2 shadow-md hover:shadow-lg transition-all duration-300">
-                Все соревнования
-                <ArrowRight size={18} className="ml-2" />
-              </Link>
+              <Button asChild variant="default" size="lg" className="mt-4 md:mt-0">
+                <Link to="/tournaments" className="inline-flex items-center">
+                  Все соревнования
+                  <ArrowRight className="ml-2" />
+                </Link>
+              </Button>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {loading ? (
                 Array(3).fill(0).map((_, index) => (

@@ -12,18 +12,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import NewsEditor from '@/components/admin/news/NewsEditor';
-
-interface NewsItem {
-  id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  category: 'matches' | 'club';
-  date: string;
-  time: string;
-  image: string;
-  views: number;
-}
+import { NewsItem, getAllNews, createNews, updateNews, deleteNews } from '@/utils/news/newsOperations';
 
 const NewsManagement = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -32,11 +21,7 @@ const NewsManagement = () => {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   useEffect(() => {
-    // Load news data
-    const loadedNews = localStorage.getItem('news');
-    if (loadedNews) {
-      setNews(JSON.parse(loadedNews));
-    }
+    setNews(getAllNews());
   }, []);
 
   const handleAddNew = () => {
@@ -68,9 +53,8 @@ const NewsManagement = () => {
     if (!confirmDelete) return;
     
     try {
-      const updatedNews = news.filter(n => n.id !== confirmDelete);
-      setNews(updatedNews);
-      localStorage.setItem('news', JSON.stringify(updatedNews));
+      deleteNews(confirmDelete);
+      setNews(getAllNews());
       toast({
         title: "Новость удалена",
         description: "Новость была успешно удалена",
@@ -87,24 +71,21 @@ const NewsManagement = () => {
 
   const handleSave = (updatedNews: NewsItem) => {
     try {
-      let updatedNewsList: NewsItem[];
-      if (news.some(n => n.id === updatedNews.id)) {
-        // Update existing news
-        updatedNewsList = news.map(n => n.id === updatedNews.id ? updatedNews : n);
+      const isExisting = news.some(n => n.id === updatedNews.id);
+      if (isExisting) {
+        updateNews(updatedNews);
         toast({
           title: "Новость обновлена",
           description: "Новость успешно обновлена",
         });
       } else {
-        // Create new news
-        updatedNewsList = [...news, updatedNews];
+        createNews(updatedNews);
         toast({
           title: "Новость добавлена",
           description: "Новая новость успешно добавлена",
         });
       }
-      setNews(updatedNewsList);
-      localStorage.setItem('news', JSON.stringify(updatedNewsList));
+      setNews(getAllNews());
       setEditMode(false);
       setCurrentNews(null);
     } catch (error) {

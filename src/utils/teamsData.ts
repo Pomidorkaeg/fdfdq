@@ -1,4 +1,3 @@
-
 import { Team } from '@/types/team';
 
 // Initial teams data
@@ -34,7 +33,7 @@ const initialTeams: Team[] = [
     id: 'gudauta-school',
     name: 'СШ Гудаута',
     shortName: 'СШ Гудаута',
-    logo: '/lovable-uploads/9fd0afcb-f7b9-4726-ad0c-9637c412c9e9.png',
+    logo: '/lovable-uploads/382be63e-ead7-422c-b229-31831c415198.png',
     primaryColor: '#2e7d32',
     secondaryColor: '#ffeb3b',
     description: 'Спортивная школа Гудаута - кузница молодых футбольных талантов, где юные спортсмены получают качественное футбольное образование. Наша миссия - выявлять и развивать молодых футболистов, прививая им не только спортивные навыки, но и важные жизненные ценности: трудолюбие, командный дух и стремление к самосовершенствованию.',

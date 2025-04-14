@@ -1,16 +1,17 @@
-
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getAssetUrl } from '@/utils/assetUtils';
+import { Button } from '@/components/ui/button';
 
 const Hero = () => {
   return (
     <div className="relative h-screen w-full flex items-center justify-center overflow-hidden">
       {/* Full-screen team photo as background */}
-      <div 
+      <div
         className="absolute inset-0 z-0"
-        style={{ 
-          backgroundImage: `url('/lovable-uploads/e711e51e-481c-438c-987e-2aa5f999290a.png')`,
+        style={{
+          backgroundImage: `url(${getAssetUrl('lovable-uploads/e711e51e-481c-438c-987e-2aa5f999290a.png')})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed'
@@ -22,8 +23,6 @@ const Hero = () => {
       
       <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
         <div className="animate-slide-up max-w-5xl">
-          {/* Removed team photo as per request */}
-          
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-fc-yellow mb-6 drop-shadow-lg tracking-tight leading-tight">
             ФК ГУДАУТА <span className="text-white text-4xl md:text-5xl lg:text-6xl">НОВОСИБИРСК</span>
           </h1>
@@ -33,20 +32,28 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 justify-center">
-            <Link 
-              to="/tournaments" 
-              className="bg-fc-yellow hover:bg-fc-yellow/90 text-fc-darkGreen px-8 py-4 text-lg rounded-md shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
+            <Button 
+              asChild
+              size="lg"
+              variant="secondary"
+              className="text-lg"
             >
-              Турнирные таблицы
-              <ArrowRight size={20} />
-            </Link>
+              <Link to="/tournaments">
+                Турнирные таблицы
+                <ArrowRight className="ml-2" />
+              </Link>
+            </Button>
             
-            <Link 
-              to="/team" 
-              className="bg-fc-darkGreen text-white hover:bg-fc-green border-fc-yellow/50 border px-8 py-4 text-lg rounded-md shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center"
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="text-lg border-fc-yellow/50 text-white hover:text-fc-yellow"
             >
-              О команде
-            </Link>
+              <Link to="/team">
+                О команде
+              </Link>
+            </Button>
           </div>
         </div>
       </div>

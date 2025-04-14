@@ -1,135 +1,61 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Image as ImageIcon, Video, ChevronDown, Search, Calendar, PlayCircle } from 'lucide-react';
+import { Image as ImageIcon, Search, Calendar, PlayCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-interface MediaItem {
-  id: string;
-  type: 'image' | 'video';
-  title: string;
-  date: string;
-  thumbnail: string;
-  url: string;
-  category: string;
-}
+import { MediaItem, getAllMedia } from '@/utils/media/mediaOperations';
 
 const Media = () => {
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Sample media data
-  const mediaItems: MediaItem[] = [
-    {
-      id: '1',
-      type: 'image',
-      title: 'Тренировка команды перед матчем с Енисеем',
-      date: '08.04.2024',
-      thumbnail: 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      url: 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      category: 'training'
-    },
-    {
-      id: '2',
-      type: 'image',
-      title: 'Матч ФК Сибирь - Спартак',
-      date: '15.04.2024',
-      thumbnail: 'https://images.unsplash.com/photo-1550881111-7cfde14b8073?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80',
-      url: 'https://images.unsplash.com/photo-1550881111-7cfde14b8073?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80',
-      category: 'match'
-    },
-    {
-      id: '3',
-      type: 'video',
-      title: 'Обзор матча ФК Сибирь - Енисей',
-      date: '11.04.2024',
-      thumbnail: 'https://images.unsplash.com/photo-1587329310686-91414b8e3cb7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      category: 'match'
-    },
-    {
-      id: '4',
-      type: 'image',
-      title: 'Стадион Спартак перед матчем',
-      date: '14.04.2024',
-      thumbnail: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2093&q=80',
-      url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2093&q=80',
-      category: 'stadium'
-    },
-    {
-      id: '5',
-      type: 'video',
-      title: 'Интервью с главным тренером',
-      date: '18.04.2024',
-      thumbnail: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
-      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      category: 'interview'
-    },
-    {
-      id: '6',
-      type: 'image',
-      title: 'Тренировка юношеской команды',
-      date: '05.04.2024',
-      thumbnail: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&auto=format&fit=crop',
-      url: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&auto=format&fit=crop',
-      category: 'academy'
-    },
-    {
-      id: '7',
-      type: 'video',
-      title: 'Лучшие моменты матча с ЦСКА',
-      date: '06.04.2024',
-      thumbnail: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      category: 'match'
-    },
-    {
-      id: '8',
-      type: 'image',
-      title: 'Игроки команды после тренировки',
-      date: '07.04.2024',
-      thumbnail: 'https://images.unsplash.com/photo-1518635017498-87f514b751ba?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      url: 'https://images.unsplash.com/photo-1518635017498-87f514b751ba?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      category: 'training'
-    }
-  ];
-  
-  const filteredMedia = mediaItems.filter((item) => {
-    // Apply type filter
-    if (filter === 'images' && item.type !== 'image') return false;
-    if (filter === 'videos' && item.type !== 'video') return false;
-    
-    // Apply category filter
-    if (filter === 'match' && item.category !== 'match') return false;
-    if (filter === 'training' && item.category !== 'training') return false;
-    if (filter === 'interview' && item.category !== 'interview') return false;
-    if (filter === 'stadium' && item.category !== 'stadium') return false;
-    if (filter === 'academy' && item.category !== 'academy') return false;
-    
-    // Apply search filter
-    if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase())) {
-      return false;
-    }
-    
-    return true;
-  });
-  
+  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
+
+  useEffect(() => {
+    setMediaItems(getAllMedia());
+  }, []);
+
   const handleFilterChange = (newFilter: string) => {
     setFilter(newFilter);
   };
-  
+
+  const filteredMedia = mediaItems.filter((item) => {
+    // First apply search filter
+    if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false;
+    }
+
+    // Then apply type/category filter
+    switch (filter) {
+      case 'images':
+        return item.type === 'image';
+      case 'videos':
+        return item.type === 'video';
+      case 'match':
+        return item.category === 'match';
+      case 'training':
+        return item.category === 'training';
+      case 'interview':
+        return item.category === 'interview';
+      case 'stadium':
+        return item.category === 'stadium';
+      case 'academy':
+        return item.category === 'academy';
+      default:
+        return true;
+    }
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
-      <main className="flex-grow pt-16 page-transition">
-        {/* Header */}
+      <main className="flex-grow pt-16">
+        {/* Hero Section */}
         <div className="relative bg-fc-green text-white py-16">
           <div 
             className="absolute inset-0 bg-gradient-to-r from-fc-green/90 to-fc-darkGreen/80"
             style={{ 
-              backgroundImage: `url('https://images.unsplash.com/photo-1567464825372-887fb33902be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80')`,
+              backgroundImage: `url('https://images.unsplash.com/photo-1567464825372-887fb33902be?ixlib=rb-4.0.3')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundBlendMode: 'overlay'

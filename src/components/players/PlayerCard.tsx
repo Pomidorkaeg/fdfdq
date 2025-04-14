@@ -1,80 +1,56 @@
-
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState } from 'react';
 import { Player } from '@/types/player';
+import { getAssetUrl } from '@/utils/assetUtils';
+import { cn } from '@/lib/utils';
 
 interface PlayerCardProps {
   player: Player;
-  isSelected: boolean;
-  primaryColor: string;
-  onSelect: (player: Player) => void;
+  onClick?: (player: Player) => void;
+  primaryColor?: string;
+  small?: boolean;
 }
 
-const PlayerCard: React.FC<PlayerCardProps> = ({ 
-  player, 
-  isSelected, 
-  primaryColor, 
-  onSelect 
-}) => {
+const PlayerCard = ({ player, onClick, primaryColor = '#2E7D32', small = false }: PlayerCardProps) => {
+  const [imageError, setImageError] = useState(false);
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   return (
-    <div
-      onClick={() => onSelect(player)}
+    <div 
       className={cn(
-        "relative bg-white rounded-xl overflow-hidden shadow-sm border transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-1",
-        isSelected 
-          ? `border-[${primaryColor}] ring-2 ring-[${primaryColor}]/20` 
-          : `border-gray-200 hover:border-[${primaryColor}]/50`
+        "group relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer",
+        small ? "h-[280px]" : "h-[360px]"
       )}
-      style={{ 
-        borderColor: isSelected ? primaryColor : '',
-        boxShadow: isSelected ? `0 0 0 2px ${primaryColor}20` : ''
-      }}
+      onClick={() => onClick?.(player)}
     >
-      <div className="flex">
-        <div className="w-1/3 relative">
-          <img 
-            src={player.image} 
-            alt={player.name} 
-            className="w-full h-full object-cover aspect-[3/4]"
-          />
-          <div 
-            className="absolute top-0 left-0 w-full h-full"
-            style={{ background: `linear-gradient(to right, ${primaryColor}80, transparent)` }}
-          ></div>
-          <div 
-            className="absolute top-3 left-3 w-8 h-8 flex items-center justify-center rounded-full font-bold text-lg text-white"
-            style={{ backgroundColor: primaryColor }}
-          >
-            {player.number}
+      <div className={cn(
+        "relative w-full overflow-hidden",
+        small ? "h-[200px]" : "h-[280px]"
+      )}>
+        <img
+          src={imageError ? getAssetUrl('placeholder.svg') : getAssetUrl(player.image)}
+          alt={player.name}
+          className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+          onError={handleImageError}
+        />
+        <div 
+          className="absolute inset-0"
+          style={{ 
+            background: `linear-gradient(to top, ${primaryColor}cc, transparent)` 
+          }}
+        />
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+        <div className="flex items-end justify-between">
+          <div>
+            <h3 className="text-lg font-semibold leading-tight mb-1">{player.name}</h3>
+            <p className="text-sm text-white/80">{player.position}</p>
           </div>
-        </div>
-        
-        <div className="w-2/3 p-4">
-          <div className="flex flex-col h-full">
-            <div>
-              <div 
-                className="text-xs font-medium mb-1"
-                style={{ color: primaryColor }}
-              >
-                {player.position}
-              </div>
-              <h3 className="text-lg font-bold mb-3">{player.name}</h3>
-            </div>
-            
-            <div className="mt-auto grid grid-cols-3 gap-2 text-center">
-              <div className="bg-gray-50 p-2 rounded">
-                <div className="text-xs text-gray-500">Матчи</div>
-                <div className="font-bold">{player.matches}</div>
-              </div>
-              <div className="bg-gray-50 p-2 rounded">
-                <div className="text-xs text-gray-500">Голы</div>
-                <div className="font-bold">{player.goals}</div>
-              </div>
-              <div className="bg-gray-50 p-2 rounded">
-                <div className="text-xs text-gray-500">Передачи</div>
-                <div className="font-bold">{player.assists}</div>
-              </div>
-            </div>
+          <div className="text-right">
+            <span className="text-3xl font-bold">{player.number}</span>
           </div>
         </div>
       </div>

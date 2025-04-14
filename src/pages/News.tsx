@@ -3,29 +3,15 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Calendar } from 'lucide-react';
-
-interface NewsItem {
-  id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  category: 'matches' | 'club';
-  date: string;
-  time: string;
-  image: string;
-  views: number;
-}
+import { getAllNews } from '@/utils/news/newsOperations';
+import type { NewsItem } from '@/utils/news/newsOperations';
 
 const News = () => {
   const [activeFilter, setActiveFilter] = useState<'all' | 'matches' | 'club'>('all');
   const [news, setNews] = useState<NewsItem[]>([]);
 
   useEffect(() => {
-    // Load news from localStorage
-    const loadedNews = localStorage.getItem('news');
-    if (loadedNews) {
-      setNews(JSON.parse(loadedNews));
-    }
+    setNews(getAllNews());
   }, []);
 
   const filteredNews = news.filter(item => {
@@ -106,7 +92,6 @@ const News = () => {
                       </span>
                     </div>
                   </div>
-                  
                   <div className="p-6">
                     <h3 className="font-bold text-xl mb-2 line-clamp-2">{item.title}</h3>
                     <p className="text-gray-600 text-sm mb-4 line-clamp-2">{item.excerpt}</p>

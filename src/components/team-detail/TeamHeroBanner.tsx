@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Team } from '@/types/team';
+import { getAssetUrl } from '@/utils/assetUtils';
 
 interface TeamHeroBannerProps {
   team: Team;
@@ -8,26 +8,33 @@ interface TeamHeroBannerProps {
 
 const TeamHeroBanner: React.FC<TeamHeroBannerProps> = ({ team }) => {
   return (
-    <div 
-      className="relative h-80 md:h-96 bg-cover bg-center rounded-xl overflow-hidden mb-8"
-      style={{ 
-        backgroundImage: `url('${team.backgroundImage}')`,
-      }}
-    >
-      <div 
-        className="absolute inset-0" 
-        style={{ 
-          backgroundColor: `${team.primaryColor}AA`,
-          backgroundImage: `linear-gradient(135deg, ${team.primaryColor}DD, ${team.secondaryColor}99)`
+    <div className="relative h-[400px] w-full overflow-hidden">
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${getAssetUrl(team.backgroundImage)})`,
         }}
-      ></div>
+      >
+        <div 
+          className="absolute inset-0" 
+          style={{ 
+            background: `linear-gradient(to right, ${team.primaryColor}cc, ${team.secondaryColor}cc)` 
+          }} 
+        />
+      </div>
       
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-6 text-center">
-        <img src={team.logo} alt={team.name} className="h-28 w-28 md:h-36 md:w-36 object-contain mb-4" />
-        <h1 className="text-3xl md:text-5xl font-bold drop-shadow-md mb-2">{team.name}</h1>
-        <p className="text-lg md:text-xl opacity-85 max-w-2xl drop-shadow-sm">
-          Основан в {team.foundedYear} году
-        </p>
+      <div className="relative container mx-auto h-full px-4 py-8 flex items-center">
+        <div className="flex items-center gap-8">
+          <img
+            src={getAssetUrl(team.logo)}
+            alt={team.name}
+            className="w-32 h-32 object-contain filter drop-shadow-lg"
+          />
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-2">{team.name}</h1>
+            <p className="text-white/80 text-lg">{team.foundedYear} год основания</p>
+          </div>
+        </div>
       </div>
     </div>
   );

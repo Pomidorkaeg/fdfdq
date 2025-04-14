@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { Users, Trophy, Settings, LogOut, Users2, Shield, Newspaper } from 'lucide-react';
+import { Users, Trophy, Settings, LogOut, Users2, Shield, Newspaper, Image, Calendar } from 'lucide-react';
 
 const AdminDashboard = () => {
   return (
@@ -62,6 +62,24 @@ const AdminDashboard = () => {
                     Новости
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    to="/admin/matches"
+                    className="block px-4 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-fc-green/10 hover:to-fc-lightGreen/10 text-gray-700 font-medium flex items-center transition-all"
+                  >
+                    <Calendar className="mr-3 h-5 w-5 text-fc-green" />
+                    Матчи
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/admin/media"
+                    className="block px-4 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-fc-green/10 hover:to-fc-lightGreen/10 text-gray-700 font-medium flex items-center transition-all"
+                  >
+                    <Image className="mr-3 h-5 w-5 text-fc-green" />
+                    Медиа
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -112,7 +130,7 @@ const AdminDashboard = () => {
                 </li>
               </ul>
             </div>
-            
+
             <div className="mb-6">
               <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3 pl-4">Соревнования</h3>
               <ul className="space-y-1">

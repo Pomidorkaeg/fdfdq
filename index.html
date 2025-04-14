@@ -2,11 +2,12 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/bds/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/bds/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#2e7d32" />
-    <meta name="description" content="ФК Гудаута - Официальный сайт футбольного клуба" />
+    <meta name="description" content="Официальный сайт футбольного клуба Гудаута" />
     <title>ФК Гудаута</title>
+    <link rel="canonical" href="https://pomidorkaeg.github.io/bds/" />
     
     <!-- Preload critical assets -->
     <link rel="preload" as="image" href="/bds/lovable-uploads/e711e51e-481c-438c-987e-2aa5f999290a.png" />
@@ -17,10 +18,12 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
     
-    <script type="text/javascript">
+    <script>
       // Single Page Apps for GitHub Pages
+      // MIT License
+      // https://github.com/rafgraph/spa-github-pages
       (function(l) {
-        if (l.search[1] === '/') {
+        if (l.search[1] === '/' ) {
           var decoded = l.search.slice(1).split('&').map(function(s) { 
             return s.replace(/~and~/g, '&')
           }).join('?');
@@ -60,74 +63,36 @@
       }
       .loading {
         position: fixed;
-        inset: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        background: #f5f5f5;
-        opacity: 0;
-        animation: fade-in 0.2s ease forwards;
+        background: #fff;
         z-index: 9999;
       }
-      @keyframes fade-in {
-        to { opacity: 1; }
-      }
-      .spinner {
+      .loading::after {
+        content: '';
         width: 40px;
         height: 40px;
-        border: 4px solid rgba(46, 125, 50, 0.1);
-        border-left-color: #2e7d32;
+        border: 4px solid #2E7D32;
+        border-top-color: transparent;
         border-radius: 50%;
-        animation: spin 0.6s linear infinite;
+        animation: spin 1s linear infinite;
       }
       @keyframes spin {
         to { transform: rotate(360deg); }
       }
-      .loading-text {
-        margin-top: 1rem;
-        color: #2e7d32;
-        font-size: 1rem;
-      }
-      .loading-error {
-        display: none;
-        text-align: center;
-        margin-top: 1rem;
-      }
-      .loading.timeout .spinner {
-        display: none;
-      }
-      .loading.timeout .loading-error {
-        display: block;
-      }
     </style>
-    <script type="module" crossorigin src="/bds/assets/index-C5T_0QIt.js"></script>
-    <link rel="modulepreload" crossorigin href="/bds/assets/vendor-VrRidEet.js">
-    <link rel="modulepreload" crossorigin href="/bds/assets/ui-dsA3UTJJ.js">
+    <script type="module" crossorigin src="/bds/assets/index-B8v6iQwI.js"></script>
+    <link rel="modulepreload" crossorigin href="/bds/assets/react-vendor-C5eXiI5f.js">
+    <link rel="modulepreload" crossorigin href="/bds/assets/ui-B5VS9Rxm.js">
     <link rel="stylesheet" crossorigin href="/bds/assets/index-DQea3YW2.css">
   </head>
   <body>
-    <div id="root">
-      <div class="loading" id="loadingIndicator">
-        <div class="spinner"></div>
-        <div class="loading-text">Загрузка...</div>
-        <div class="loading-error">
-          <p style="color: #2e7d32; font-size: 1.1rem;">Загрузка занимает больше времени, чем обычно</p>
-          <button onclick="window.location.reload()" 
-            style="background: #2e7d32; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 12px;">
-            Обновить страницу
-          </button>
-        </div>
-      </div>
-    </div>
-    <script>
-      // Handle loading timeout
-      setTimeout(function() {
-        var loadingEl = document.getElementById('loadingIndicator');
-        if (loadingEl) {
-          loadingEl.classList.add('timeout');
-        }
-      }, 10000);
-    </script>
+    <div id="loadingIndicator" class="loading"></div>
+    <div id="root"></div>
   </body>
 </html>

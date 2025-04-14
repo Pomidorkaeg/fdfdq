@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - master
 
 jobs:
   build-and-deploy:
@@ -28,7 +29,7 @@ jobs:
           NODE_ENV: production
           PUBLIC_URL: /bds
 
-      - name: Configure GitHub Pages routing
+      - name: Configure GitHub Pages
         run: |
           cp dist/index.html dist/404.html
           touch dist/.nojekyll
@@ -38,4 +39,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          cname: ${{ secrets.CNAME }}
           force_orphan: true

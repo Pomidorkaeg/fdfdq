@@ -39,19 +39,23 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
   }
 }
 
-// Initialize the app with improved error handling
+// Initialize the app with improved error handling and loading state management
 const init = async () => {
   try {
-    // Wait for DOM to be ready
-    if (document.readyState === 'loading') {
-      await new Promise(resolve => {
-        document.addEventListener('DOMContentLoaded', resolve);
-      });
+    // Remove the loading indicator from index.html
+    const loadingEl = document.querySelector('.loading');
+    if (loadingEl?.parentNode) {
+      loadingEl.parentNode.removeChild(loadingEl);
     }
 
     const root = document.getElementById('root');
     if (!root) {
       throw new Error('Root element not found');
+    }
+
+    // Clear any stale data from previous sessions
+    if (window.history.scrollRestoration) {
+      window.history.scrollRestoration = 'manual';
     }
 
     ReactDOM.createRoot(root).render(
@@ -61,12 +65,6 @@ const init = async () => {
         </ErrorBoundary>
       </React.StrictMode>
     );
-
-    // Remove loading indicator once app is mounted
-    const loadingEl = document.querySelector('.loading');
-    if (loadingEl?.parentNode) {
-      loadingEl.parentNode.removeChild(loadingEl);
-    }
   } catch (error) {
     console.error('Failed to initialize app:', error);
     document.body.innerHTML = `
@@ -85,4 +83,4 @@ const init = async () => {
   }
 };
 
-init();
+init().catch(console.error);

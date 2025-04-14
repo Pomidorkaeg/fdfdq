@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -11,6 +10,27 @@ const Navbar = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   
   const isActive = (path: string) => location.pathname === path;
+
+  // Prefetch adjacent routes on hover
+  const prefetchRoute = (path: string) => {
+    // Don't prefetch current route
+    if (path === location.pathname) return;
+
+    const routes = {
+      '/': () => import('../pages/Index'),
+      '/team': () => import('../pages/Team'),
+      '/news': () => import('../pages/News'),
+      '/matches': () => import('../pages/Matches'),
+      '/tournaments': () => import('../pages/Tournaments'),
+      '/media': () => import('../pages/Media'),
+      '/contacts': () => import('../pages/Contacts')
+    };
+
+    if (path in routes) {
+      // @ts-ignore - Dynamic import
+      routes[path]().catch(console.error);
+    }
+  };
   
   const navLinks = [
     { name: 'Главная', path: '/' },
@@ -42,6 +62,7 @@ const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
+                onMouseEnter={() => prefetchRoute(link.path)}
                 className={cn(
                   "nav-link px-4 py-2 rounded-md text-base font-medium transition-all duration-200",
                   isActive(link.path) 
@@ -82,6 +103,7 @@ const Navbar = () => {
                   : "text-white hover:text-fc-yellow hover:bg-fc-green/50"
               )}
               onClick={() => setIsMenuOpen(false)}
+              onMouseEnter={() => prefetchRoute(link.path)}
             >
               {link.name}
             </Link>

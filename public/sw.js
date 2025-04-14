@@ -1,42 +1,79 @@
-const CACHE_NAME = 'fc-gudauta-v1';
-const urlsToCache = [
+const CACHE_NAME = 'fc-gudauta-v2';
+const STATIC_CACHE = [
   '/bds/',
   '/bds/index.html',
   '/bds/assets/index.css',
-  '/bds/assets/index.js',
-  '/bds/lovable-uploads/e711e51e-481c-438c-987e-2aa5f999290a.png',
-  '/bds/lovable-uploads/10641be5-36c7-4f6d-a5b4-ee39048e40ac.png'
+  '/bds/assets/index.js'
 ];
 
+const ASSET_CACHE = [
+  '/bds/lovable-uploads/',
+  '/bds/favicon.ico',
+  '/bds/og-image.png',
+  '/bds/placeholder.svg'
+];
+
+// Install event - cache static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(STATIC_CACHE);
+    })
   );
 });
 
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request).then(
-          (response) => {
-            if(!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-            return response;
+// Activate event - clean up old caches
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
           }
-        );
+        })
+      );
+    })
+  );
+});
+
+// Fetch event - network first for API, cache first for assets
+self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  
+  // Handle asset requests (images, etc)
+  if (ASSET_CACHE.some(path => url.pathname.startsWith(path))) {
+    event.respondWith(
+      caches.match(event.request)
+        .then((response) => {
+          return response || fetch(event.request).then((response) => {
+            // Cache the fetched response
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+            return response;
+          });
+        })
+    );
+    return;
+  }
+
+  // Network first strategy for everything else
+  event.respondWith(
+    fetch(event.request)
+      .then((response) => {
+        // Cache successful responses
+        if (response.ok && response.type === 'basic') {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return response;
+      })
+      .catch(() => {
+        return caches.match(event.request);
       })
   );
 });

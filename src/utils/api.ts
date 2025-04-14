@@ -1,4 +1,3 @@
-
 import { toast } from '@/components/ui/use-toast';
 
 // Define interfaces for the API responses
@@ -54,6 +53,19 @@ export interface Tournament {
   teams: number;
   source: string;
   featured: boolean;
+}
+
+// Cache implementation
+const cache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+interface CacheItem<T> {
+  data: T;
+  timestamp: number;
+}
+
+function isCacheValid<T>(item: CacheItem<T>): boolean {
+  return Date.now() - item.timestamp < CACHE_DURATION;
 }
 
 // Функция для получения данных с сайта МОО СФФ "Сибирь"
@@ -169,9 +181,9 @@ export const getTournamentTable = async (tournamentId: string, source: string): 
     console.error("Failed to fetch tournament data:", error);
     throw error;
   }
-};
+}
 
-export const getTournamentsList = async (): Promise<Tournament[]> => {
+async function fetchTournamentsData(): Promise<Tournament[]> {
   console.log("Fetching tournaments list");
   
   // В реальном приложении здесь был бы API-запрос
@@ -228,7 +240,26 @@ export const getTournamentsList = async (): Promise<Tournament[]> => {
       ]);
     }, 1000);
   });
-};
+}
+
+// API functions with caching
+export async function getTournamentsList(): Promise<Tournament[]> {
+  const cacheKey = 'tournaments';
+  const cached = cache.get(cacheKey);
+  
+  if (cached && isCacheValid(cached)) {
+    return cached.data;
+  }
+  
+  try {
+    const data = await fetchTournamentsData();
+    cache.set(cacheKey, { data, timestamp: Date.now() });
+    return data;
+  } catch (error) {
+    console.error('Error fetching tournaments:', error);
+    throw error;
+  }
+}
 
 // Функция для получения данных турнира
 export const fetchTournamentData = async (tournamentId: string): Promise<TournamentData> => {
@@ -252,4 +283,14 @@ export const fetchTournamentData = async (tournamentId: string): Promise<Tournam
     });
     throw error;
   }
-};
+}
+
+// Helper function to preload data
+export function preloadData() {
+  // Preload common data
+  getTournamentsList().catch(console.error);
+  // Add other preload calls here
+}
+
+// Call preload when module loads
+preloadData();

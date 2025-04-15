@@ -15,7 +15,7 @@ export const getAssetUrl = (path: string): string => {
 
   // For GitHub Pages deployment
   const isDev = import.meta.env.DEV;
-  const baseUrl = isDev ? '' : '/bds';
+  const baseUrl = isDev ? '' : '/fdfdq';
   
   // Clean the path
   const cleanPath = path.replace(/^\/+/, '').replace(/^dist\//, '');

@@ -13,11 +13,12 @@ export const getAssetUrl = (path: string): string => {
     return '';
   }
 
-  // Get base URL from Vite configuration
-  const baseUrl = import.meta.env.DEV ? '' : '/fdfdq';
+  // Use Vite's base URL configuration
+  const baseUrl = import.meta.env.BASE_URL;
   
-  // Clean the path
+  // Clean the path and ensure it doesn't start with a slash
   const cleanPath = path.replace(/^\/+/, '').replace(/^dist\//, '');
   
-  return `${baseUrl}/${cleanPath}`.replace(/\/+/g, '/');
+  // Combine base URL with clean path, ensuring no double slashes
+  return `${baseUrl}${cleanPath}`.replace(/([^:]\/)\/+/g, '$1');
 };

@@ -35,29 +35,11 @@ export default defineConfig({
           'ui-utils': ['lucide-react', 'class-variance-authority', 'clsx', 'tailwind-merge'],
           'data-management': ['@tanstack/react-query'],
           'forms': ['react-hook-form', 'zod']
-        },
-        chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash][extname]'
+        }
       }
-    },
-    target: 'es2020',
-    cssTarget: 'chrome61'
-  },
-  optimizeDeps: {
-    include: [
-      'react',
-      'react-dom',
-      'react-router-dom',
-      '@radix-ui/react-dialog',
-      '@radix-ui/react-select',
-      '@radix-ui/react-tabs'
-    ]
+    }
   },
   server: {
-    port: 5173,
-    host: true
-  },
-  preview: {
     port: 5173,
     host: true
   }

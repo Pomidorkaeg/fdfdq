@@ -1,52 +1,7 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/gh-pages
 name: Deploy to GitHub Pages
 
 on:
   push:
-<<<<<<< HEAD
-    branches:
-      - main
-      - master
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
-        env:
-          NODE_ENV: production
-          PUBLIC_URL: /bds
-
-      - name: Configure GitHub Pages
-        run: |
-          cp dist/index.html dist/404.html
-          touch dist/.nojekyll
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          cname: ${{ secrets.CNAME }}
-          force_orphan: true
-=======
     branches: [ main ]
   workflow_dispatch:
 
@@ -65,22 +20,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: 'npm'
+      
       - name: Install dependencies
         run: npm ci
+      
       - name: Build
         run: npm run build
+        env:
+          VITE_BASE_URL: /bds
+      
       - name: Setup Pages
         uses: actions/configure-pages@v4
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
-          
+
   deploy:
     environment:
       name: github-pages
@@ -91,4 +53,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
->>>>>>> origin/gh-pages

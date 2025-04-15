@@ -13,11 +13,12 @@ export const getAssetUrl = (path: string): string => {
     return '';
   }
 
-  // For local development and production
-  const baseUrl = '/bds';
+  // For GitHub Pages deployment
+  const isDev = import.meta.env.DEV;
+  const baseUrl = isDev ? '' : '/bds';
   
-  // Remove any leading slashes from the path and handle dist/ paths
+  // Clean the path
   const cleanPath = path.replace(/^\/+/, '').replace(/^dist\//, '');
   
-  return `${baseUrl}/${cleanPath}`;
+  return `${baseUrl}/${cleanPath}`.replace(/\/+/g, '/');
 };

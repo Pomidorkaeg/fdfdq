@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fc-gudauta-v1';
+const CACHE_NAME = 'fc-gudauta-v2';
 const urlsToCache = [
   '/fdfdq/',
   '/fdfdq/index.html',
@@ -12,8 +12,26 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
+        console.log('Cache opened successfully');
         return cache.addAll(urlsToCache);
       })
+      .catch((error) => {
+        console.error('Cache installation failed:', error);
+      })
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
   );
 });
 
@@ -24,19 +42,31 @@ self.addEventListener('fetch', (event) => {
         if (response) {
           return response;
         }
-        return fetch(event.request).then(
-          (response) => {
-            if(!response || response.status !== 200 || response.type !== 'basic') {
+
+        return fetch(event.request)
+          .then((response) => {
+            if (!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
+
             const responseToCache = response.clone();
             caches.open(CACHE_NAME)
               .then((cache) => {
                 cache.put(event.request, responseToCache);
+              })
+              .catch((error) => {
+                console.error('Cache put failed:', error);
               });
+
             return response;
-          }
-        );
+          })
+          .catch((error) => {
+            console.error('Fetch failed:', error);
+            return new Response('Network error occurred', {
+              status: 503,
+              statusText: 'Service Unavailable'
+            });
+          });
       })
   );
 });

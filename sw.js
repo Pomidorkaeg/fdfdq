@@ -1,72 +1,95 @@
-const CACHE_NAME = 'fc-gudauta-v2';
-const urlsToCache = [
+const CACHE_NAME = 'fc-gudauta-v3';
+const STATIC_CACHE = [
   '/fdfdq/',
   '/fdfdq/index.html',
+  '/fdfdq/404.html',
   '/fdfdq/assets/index.css',
   '/fdfdq/assets/index.js',
-  '/fdfdq/lovable-uploads/e711e51e-481c-438c-987e-2aa5f999290a.png',
-  '/fdfdq/lovable-uploads/10641be5-36c7-4f6d-a5b4-ee39048e40ac.png'
+  '/fdfdq/assets/react-vendor-C5eXiI5f.js',
+  '/fdfdq/assets/ui-B5VS9Rxm.js',
+  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap'
 ];
 
+const ASSET_CACHE = [
+  '/fdfdq/lovable-uploads/',
+  '/fdfdq/favicon.ico',
+  '/fdfdq/og-image.png',
+  '/fdfdq/placeholder.svg'
+];
+
+// Install event - cache static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Cache opened successfully');
-        return cache.addAll(urlsToCache);
-      })
-      .catch((error) => {
-        console.error('Cache installation failed:', error);
-      })
-  );
-});
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(STATIC_CACHE);
     })
   );
+  // Activate new service worker immediately
+  self.skipWaiting();
 });
 
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
-          return response;
-        }
-
-        return fetch(event.request)
-          .then((response) => {
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
+// Activate event - clean up old caches
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    Promise.all([
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME) {
+              return caches.delete(cacheName);
             }
-
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              })
-              .catch((error) => {
-                console.error('Cache put failed:', error);
-              });
-
-            return response;
           })
-          .catch((error) => {
-            console.error('Fetch failed:', error);
-            return new Response('Network error occurred', {
-              status: 503,
-              statusText: 'Service Unavailable'
+        );
+      }),
+      // Take control of all clients immediately
+      self.clients.claim()
+    ])
+  );
+});
+
+// Fetch event - network first for API, cache first for assets
+self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
+  // Handle navigation requests
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => {
+          return caches.match('/fdfdq/index.html');
+        })
+    );
+    return;
+  }
+
+  // Handle asset requests (images, etc)
+  if (ASSET_CACHE.some(path => url.pathname.startsWith(path))) {
+    event.respondWith(
+      caches.match(event.request)
+        .then((response) => {
+          return response || fetch(event.request).then((response) => {
+            // Cache the fetched response
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
             });
+            return response;
           });
+        })
+    );
+    return;
+  }
+
+  // Network first strategy for everything else
+  event.respondWith(
+    fetch(event.request)
+      .catch(() => {
+        return caches.match(event.request);
       })
   );
 });

@@ -13,9 +13,8 @@ export const getAssetUrl = (path: string): string => {
     return '';
   }
 
-  // For GitHub Pages deployment
-  const isDev = import.meta.env.DEV;
-  const baseUrl = isDev ? '' : '/bds';
+  // Get base URL from Vite configuration
+  const baseUrl = import.meta.env.DEV ? '' : '/fdfdq';
   
   // Clean the path
   const cleanPath = path.replace(/^\/+/, '').replace(/^dist\//, '');

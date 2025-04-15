@@ -1,4 +1,3 @@
-
 @echo off
 echo Starting development server...
 echo.
@@ -8,8 +7,12 @@ echo Building optimized project...
 set NODE_ENV=production
 npm run build
 echo.
-echo Starting server, please wait...
-start cmd /k "npm run dev && echo Server stopped! && pause"
+echo Starting server with optimized compression and caching, please wait...
+REM Install serve globally if not already installed
+npm install -g serve
+
+REM Start the server with optimized compression and caching
+serve -s dist --cors --compress --single --config ./serve.json
 echo.
 echo ========================================
 echo The server is now running!

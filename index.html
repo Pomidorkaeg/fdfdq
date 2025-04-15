@@ -75,6 +75,10 @@
         justify-content: center;
         background: #fff;
         z-index: 9999;
+        transition: opacity 0.3s ease-out;
+      }
+      .loading.fade-out {
+        opacity: 0;
       }
       .loading::after {
         content: '';

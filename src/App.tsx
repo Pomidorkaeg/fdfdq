@@ -49,11 +49,18 @@ const MatchesManagement = lazy(() => import("./pages/admin/MatchesManagement"));
 
 const App = () => {
   useEffect(() => {
-    // Remove loader once app is mounted
-    const loadingEl = document.getElementById('loadingIndicator');
-    if (loadingEl?.parentNode) {
-      loadingEl.parentNode.removeChild(loadingEl);
-    }
+    // Remove loading indicator with a slight delay to ensure React is ready
+    const timer = setTimeout(() => {
+      const loadingEl = document.getElementById('loadingIndicator');
+      if (loadingEl?.parentNode) {
+        loadingEl.classList.add('fade-out');
+        setTimeout(() => {
+          loadingEl.parentNode.removeChild(loadingEl);
+        }, 300);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (

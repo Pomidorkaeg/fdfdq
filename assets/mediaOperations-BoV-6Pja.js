@@ -1,2 +1,0 @@
-const o=()=>{try{const e=localStorage.getItem("media");if(e)return JSON.parse(e)}catch(e){console.error("Failed to load media from localStorage:",e)}return[]},d=e=>{try{localStorage.setItem("media",JSON.stringify(e))}catch(a){console.error("Failed to save media to localStorage:",a)}},i=()=>o(),s=e=>{const a=o();a.push(e),d(a)},c=e=>{const a=o(),t=a.findIndex(r=>r.id===e.id);t!==-1&&(a[t]=e,d(a))},n=e=>{const t=o().filter(r=>r.id!==e);d(t)};export{s as c,n as d,i as g,c as u};
-//# sourceMappingURL=mediaOperations-BoV-6Pja.js.map

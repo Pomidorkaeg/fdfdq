@@ -19,48 +19,51 @@ const PageLoading = () => (
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes (previously cacheTime)
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
       refetchOnWindowFocus: false,
-      retry: 1
+      retry: 1,
+      suspense: false // Disable suspense mode for queries
     },
   },
 });
 
-// Preload critical components
-const Index = lazy(() => import("./pages/Index"));
-const Team = lazy(() => import("./pages/Team"));
-const News = lazy(() => import("./pages/News"));
-const Matches = lazy(() => import("./pages/Matches"));
-const Tournaments = lazy(() => import("./pages/Tournaments"));
-const Media = lazy(() => import("./pages/Media"));
-const Contacts = lazy(() => import("./pages/Contacts"));
+// Preload critical components with error boundaries
+const Index = lazy(() => import("./pages/Index").catch(() => import("./pages/NotFound")));
+const Team = lazy(() => import("./pages/Team").catch(() => import("./pages/NotFound")));
+const News = lazy(() => import("./pages/News").catch(() => import("./pages/NotFound")));
+const Matches = lazy(() => import("./pages/Matches").catch(() => import("./pages/NotFound")));
+const Tournaments = lazy(() => import("./pages/Tournaments").catch(() => import("./pages/NotFound")));
+const Media = lazy(() => import("./pages/Media").catch(() => import("./pages/NotFound")));
+const Contacts = lazy(() => import("./pages/Contacts").catch(() => import("./pages/NotFound")));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-// Admin routes - only load when needed
-const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
-const AdminHome = lazy(() => import("./pages/admin/AdminHome"));
-const PlayersManagement = lazy(() => import("./pages/admin/PlayersManagement"));
-const CoachesManagement = lazy(() => import("./pages/admin/CoachesManagement"));
-const TeamsManagement = lazy(() => import("./pages/admin/TeamsManagement"));
-const NewsManagement = lazy(() => import("./pages/admin/NewsManagement"));
-const MediaManagement = lazy(() => import("./pages/admin/MediaManagement"));
-const MatchesManagement = lazy(() => import("./pages/admin/MatchesManagement"));
+// Admin routes with error handling
+const AdminDashboard = lazy(() => import("./pages/admin/Dashboard").catch(() => import("./pages/NotFound")));
+const AdminHome = lazy(() => import("./pages/admin/AdminHome").catch(() => import("./pages/NotFound")));
+const PlayersManagement = lazy(() => import("./pages/admin/PlayersManagement").catch(() => import("./pages/NotFound")));
+const CoachesManagement = lazy(() => import("./pages/admin/CoachesManagement").catch(() => import("./pages/NotFound")));
+const TeamsManagement = lazy(() => import("./pages/admin/TeamsManagement").catch(() => import("./pages/NotFound")));
+const NewsManagement = lazy(() => import("./pages/admin/NewsManagement").catch(() => import("./pages/NotFound")));
+const MediaManagement = lazy(() => import("./pages/admin/MediaManagement").catch(() => import("./pages/NotFound")));
+const MatchesManagement = lazy(() => import("./pages/admin/MatchesManagement").catch(() => import("./pages/NotFound")));
 
 const App = () => {
   useEffect(() => {
-    // Remove loading indicator with a slight delay to ensure React is ready
-    const timer = setTimeout(() => {
-      const loadingEl = document.getElementById('loadingIndicator');
-      if (loadingEl?.parentNode) {
-        loadingEl.classList.add('fade-out');
-        setTimeout(() => {
-          loadingEl.parentNode.removeChild(loadingEl);
-        }, 300);
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
+    // Pre-load critical routes
+    const preloadRoutes = () => {
+      void import("./pages/Index");
+      void import("./pages/Team");
+      void import("./pages/News");
+    };
+    preloadRoutes();
+    
+    // Remove loading indicator
+    const loadingEl = document.getElementById('loadingIndicator');
+    if (loadingEl?.parentNode) {
+      loadingEl.classList.add('fade-out');
+      setTimeout(() => loadingEl.parentNode.removeChild(loadingEl), 300);
+    }
   }, []);
 
   return (

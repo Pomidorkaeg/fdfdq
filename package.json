@@ -10,9 +10,11 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist -b gh-pages",
-    "postbuild": "node -e \"require('fs').copyFileSync('dist/index.html', 'dist/404.html')\""
+    "postbuild": "node -e \"require('fs').copyFileSync('dist/index.html', 'dist/404.html')\"",
+    "clean": "rimraf dist",
+    "build:prod": "npm run clean && npm run build"
   },
-  "homepage": "https://pomidorkaeg.github.io/bds/",
+  "homepage": "https://pomidorkaeg.github.io/fdfdq/",
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",
